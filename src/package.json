@@ -1,0 +1,18 @@
+{
+  "name": "nodejs-sdk-src",
+  "version": "1.0.0",
+  "description": "NodeJS SDK src",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsonwebtoken": "^8.4.0",
+    "openid-client": "^2.4.5",
+    "q": "^1.5.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  }
+}
