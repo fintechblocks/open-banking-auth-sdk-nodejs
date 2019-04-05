@@ -1,6 +1,6 @@
 # NodeJs-SDK #
 
-## What is Open Banking Authorization NodeJS SDK? ##
+## What is NodeJs-SDK? ##
 
 This SDK provides tools for the integration of the Open Banking authorization flow into your NodeJs server application.
 
@@ -12,13 +12,13 @@ This repository contains two subfolders:
 
 First read throught the Authorization part of API documentation.
 
-[Account-information API documentation](https://portal.sandbox.mkb.hu/api-documentation/account-info-1.0)
+Account-information API documentation: https://<sandbox_portal_host_of_the_bank>/api-documentation/account-info-1.0
 
-[Payment-initiation API documentation](https://portal.sandbox.mkb.hu/api-documentation/payment-init-1.0)
+Payment-initiation API documentation: https://<sandbox_portal_host_of_the_bank>/api-documentation/payment-init-1.0
 
 ### Create an OpenBankingAuth istance ###
 
-**OpenBankingAuth(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope) - constructor**
+**OpenBankingAuth(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri) - constructor**
 
 *Required parameters*
 
@@ -29,13 +29,15 @@ First read throught the Authorization part of API documentation.
 * tokenEndpointUri (token endpoint uri of OIDC server)
 * authEndpointUri (authentication endpoint uri of OIDC server)
 * scope (depends on API, read documentation)
+* jwksUri (certs endpoint uri of OIDC server)
+* issuer = (sandbox endpoint uri of OIDC server);
 
 **Usage**
 
 ```javascript
 const OpenBankingAuth = require('../src/OpenBankingAuth').OpenBankingAuth;
 ...
-var accountInfoAuth = new OpenBankingAuth(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope);
+var accountInfoAuth = new OpenBankingAuth(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri);
 ```
 
 ### Get an access-token ###
@@ -54,7 +56,7 @@ var accessToken = await accountInfoAuth.getAccessToken();
 
 *Required parameters*
 
-* intentId (identification of previously created intent, e.g. AccountRequestId)
+* intentId (identification of previously created intent, e.g. ConsentId)
 * state (random string)
 * nonce (random string)
 
@@ -82,16 +84,15 @@ var newTokens = await accountInfoAuth.exchangeToken(code);
 
 ### Create signature header ###
 
-**createSignatureHeader(body, issuer):string**
+**createSignatureHeader(body):string**
 
 *Required parameters*
 
 * body (intent, e.g. an account-request)
-* issuer
 
 **Usage**
 ```javascript
-var xJwsSignature = await accountInfoAuth.createSignatureHeader(body, issuer);
+var xJwsSignature = await accountInfoAuth.createSignatureHeader(body);
 ```
 
 ### Check if a token is expired ###
@@ -128,6 +129,8 @@ var newTokens = accountInfoAuth.refreshToken(refreshToken);
 
 ## How to run the example ##
 
+Open *example/app.js* and replace <sandbox_api_host_of_the_bank> with correct value (e.g. api.sandbox.bank.hu).
+
 Run example.
 
 ```shell
@@ -135,4 +138,4 @@ cd example
 npm start
 ```
 
-Open your browser and navigate to *http//localhost:3000/account-info* or *http//localhost:3000/payment-init*.
+Open your browser and navigate to *http://localhost:3000/account-info* or *http://localhost:3000/payment-init*.

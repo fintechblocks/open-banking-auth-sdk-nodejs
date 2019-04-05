@@ -2,7 +2,7 @@
 
 const utils = require('./utils');
 module.exports.OpenBankingAuth = class OpenBankingAuth {
-  constructor(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope) {
+  constructor(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri) {
     this.clientId = clientId;
     this.privateKey = privateKey;
     this.keyID = keyID;
@@ -10,10 +10,12 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
     this.tokenEndpointUri = tokenEndpointUri;
     this.authEndpointUri = authEndpointUri;
     this.scope = scope;
+    this.issuer = issuer; 
+    this.jwksUri = jwksUri;
   }
 
   async getAccessToken() {
-    var client = await utils.createClient(this.clientId, this.privateKey, this.tokenEndpointUri, this.authEndpointUri);
+    var client = await utils.createClient(this.clientId, this.privateKey, this.tokenEndpointUri, this.authEndpointUri, this.issuer, this.jwksUri);
     this.client = client;
     const accessTokenWithClientCredentials = await client.grant({
       grant_type: 'client_credentials',
@@ -72,14 +74,15 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
     return expiration < now;
   }
 
-  async createSignatureHeader(body, issuer) {
+  async createSignatureHeader(body) {
+    //because of different system-time
+    const yesterday = new Date().getTime() - 86400;
     var jwtHeader = {
       alg: 'RS256',
       kid: this.keyID,
-      typ: undefined,
       b64: false,
-      'http://openbanking.org.uk/iat': new Date().getTime(),
-      'http://openbanking.org.uk/iss': issuer,
+      'http://openbanking.org.uk/iat': yesterday,
+      'http://openbanking.org.uk/iss': 'C=UK, ST=England, L=London, O=Acme Ltd.',
       crit: ['b64', 'http://openbanking.org.uk/iat', 'http://openbanking.org.uk/iss']
     };
     var signature = await utils.jwtSign(body, this.privateKey, {
