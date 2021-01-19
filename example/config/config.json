@@ -1,0 +1,55 @@
+{
+    "keyId": "AfFNfYXZf3arkkxv_9zqRU4d1jp1b39Edw1bxfEK5-4",
+    "tokenEndpointUri": "https://<sandbox_api_host_of_the_bank>/auth/realms/ftb-sandbox/protocol/openid-connect/token",
+    "authEndpointUri": "https://<sandbox_api_host_of_the_bank>/auth/realms/ftb-sandbox/protocol/openid-connect/auth",
+    "accountInfo": {
+        "clientId": "ftb-demo-app@account-info-1.0",
+        "apiUrl": "https://<sandbox_api_host_of_the_bank>/account-info-1.0/open-banking/v3.1/aisp",
+        "scope": "accounts",
+        "redirectUri": "http://localhost:3000/account-info",
+        "tokenIssuer": "https://<sandbox_api_host_of_the_bank>/auth/realms/ftb-sandbox",
+        "jwksUri": "https://<sandbox_api_host_of_the_bank>/auth/realms/ftb-sandbox/protocol/openid-connect/certs",
+        "consent": {
+            "Data": {
+                "Permissions": [
+                    "ReadAccountsBasic"
+                ],
+                "ExpirationDateTime": "2050-08-02T00:00:00+00:00",
+                "TransactionFromDateTime": "2017-05-03T00:00:00+00:00",
+                "TransactionToDateTime": "2019-12-03T00:00:00+00:00"
+            },
+            "Risk": {}
+        }
+    },
+    "paymentInit": {
+        "clientId": "ftb-demo-app@payment-init-1.0",
+        "apiUrl": "https://<sandbox_api_host_of_the_bank>/payment-init-1.0/open-banking/v3.1/pisp",
+        "scope": "payments",
+        "redirectUri": "http://localhost:3000/payment-init",
+        "tokenIssuer": "https://<sandbox_api_host_of_the_bank>/auth/realms/ftb-sandbox",
+        "jwksUri": "https://<sandbox_api_host_of_the_bank>/auth/realms/ftb-sandbox/protocol/openid-connect/certs",
+        "consent": {
+            "Data": {
+                "Initiation": {
+                    "InstructionIdentification": "ACME412",
+                    "EndToEndIdentification": "FRESCO.21302.GFX.20",
+                    "InstructedAmount": {
+                        "Amount": "165.88",
+                        "Currency": "HUF"
+                    },
+                    "CreditorAccount": {
+                        "SchemeName": "IBAN",
+                        "Identification": "HU14120103740010183300300001",
+                        "Name": "ACME Inc",
+                        "SecondaryIdentification": "0002"
+                    },
+                    "RemittanceInformation": {
+                        "Reference": "FRESCO-101",
+                        "Unstructured": "Internal ops code 5120101"
+                    }
+                }
+            },
+            "Risk": {}
+        }
+    }
+}

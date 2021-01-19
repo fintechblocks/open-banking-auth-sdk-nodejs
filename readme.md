@@ -16,7 +16,7 @@ Account-information API documentation: https://<sandbox_portal_host_of_the_bank>
 
 Payment-initiation API documentation: https://<sandbox_portal_host_of_the_bank>/api-documentation/payment-init-1.0
 
-### Create an OpenBankingAuth istance ###
+### Create an OpenBankingAuth instance ###
 
 **OpenBankingAuth(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri) - constructor**
 
@@ -37,7 +37,7 @@ Payment-initiation API documentation: https://<sandbox_portal_host_of_the_bank>/
 ```javascript
 const OpenBankingAuth = require('../src/OpenBankingAuth').OpenBankingAuth;
 ...
-var accountInfoAuth = new OpenBankingAuth(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri);
+const accountInfoAuth = new OpenBankingAuth(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri);
 ```
 
 ### Get an access-token ###
@@ -47,7 +47,7 @@ var accountInfoAuth = new OpenBankingAuth(clientId, privateKey, keyID, redirectU
 **Usage**
 
 ```javascript
-var accessToken = await accountInfoAuth.getAccessToken();
+const accessToken = await accountInfoAuth.getAccessToken();
 ```
 
 ### Generate authorization url ###
@@ -63,7 +63,7 @@ var accessToken = await accountInfoAuth.getAccessToken();
 **Usage**
 
 ```javascript
-var authUrl = await accountInfoAuth.generateAuthorizationUrl(intentId, state, nonce);
+const authUrl = await accountInfoAuth.generateAuthorizationUrl(intentId, state, nonce);
 ```
 
 ### Exhange authorization code to tokens ###
@@ -77,7 +77,7 @@ var authUrl = await accountInfoAuth.generateAuthorizationUrl(intentId, state, no
 **Usage**
 
 ```javascript
-var newTokens = await accountInfoAuth.exchangeToken(code);
+const newTokens = await accountInfoAuth.exchangeToken(code);
 ```
 
 ## Extra functionality ##
@@ -92,7 +92,7 @@ var newTokens = await accountInfoAuth.exchangeToken(code);
 
 **Usage**
 ```javascript
-var xJwsSignature = await accountInfoAuth.createSignatureHeader(body);
+const xJwsSignature = await accountInfoAuth.createSignatureHeader(body);
 ```
 
 ### Check if a token is expired ###
@@ -110,7 +110,7 @@ var xJwsSignature = await accountInfoAuth.createSignatureHeader(body);
 **Usage**
 
 ```javascript
-var isExpired = accountInfoAuth.isTokenExpired(token, 5000); // will token expire after five seconds?
+const isExpired = accountInfoAuth.isTokenExpired(token, 5000); // will token expire after five seconds?
 ```
 
 ### Use a refresh token ###
@@ -124,7 +124,7 @@ var isExpired = accountInfoAuth.isTokenExpired(token, 5000); // will token expir
 **Usage**
 
 ```javascript
-var newTokens = accountInfoAuth.refreshToken(refreshToken);
+const newTokens = accountInfoAuth.refreshToken(refreshToken);
 ```
 
 ## How to run the example ##

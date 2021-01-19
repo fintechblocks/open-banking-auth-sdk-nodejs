@@ -15,7 +15,7 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
   }
 
   async getAccessToken() {
-    var client = await utils.createClient(this.clientId, this.privateKey, this.tokenEndpointUri, this.authEndpointUri, this.issuer, this.jwksUri);
+    const client = await utils.createClient(this.clientId, this.privateKey, this.tokenEndpointUri, this.authEndpointUri, this.issuer, this.jwksUri);
     this.client = client;
     const accessTokenWithClientCredentials = await client.grant({
       grant_type: 'client_credentials',
@@ -25,7 +25,7 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
   }
 
   async generateAuthorizationUrl(intentId, state, nonce) {
-    var requestObject = await utils.jwtSign({
+    const requestObject = await utils.jwtSign({
       client_id: this.clientId,
       redirect_uri: this.redirectUri,
       claims: {
@@ -53,7 +53,7 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
   }
 
   async exchangeToken(code) {
-    var tokensWithAuthCode = await this.client.grant({
+    const tokensWithAuthCode = await this.client.grant({
       grant_type: 'authorization_code',
       code: code,
       redirect_uri: this.redirectUri
@@ -67,17 +67,19 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
   }
 
   isTokenExpired(token, expiredAfterSeconds) {
-    var decodedJwt = utils.decodeJwt(token);
-    var expiration = decodedJwt.payload.exp * 1000;
-    var now = new Date().getTime();
-    if (expiredAfterSeconds) now += expiredAfterSeconds;
+    const decodedJwt = utils.decodeJwt(token);
+    const expiration = decodedJwt.payload.exp * 1000;
+    const now = new Date().getTime();
+    if (expiredAfterSeconds) {
+      now += expiredAfterSeconds;
+    }
     return expiration < now;
   }
 
   async createSignatureHeader(body) {
     //because of different system-time
     const yesterday = new Date().getTime() - 86400;
-    var jwtHeader = {
+    const jwtHeader = {
       alg: 'RS256',
       kid: this.keyID,
       b64: false,
@@ -85,7 +87,7 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
       'http://openbanking.org.uk/iss': 'C=UK, ST=England, L=London, O=Acme Ltd.',
       crit: ['b64', 'http://openbanking.org.uk/iat', 'http://openbanking.org.uk/iss']
     };
-    var signature = await utils.jwtSign(body, this.privateKey, {
+    const signature = await utils.jwtSign(body, this.privateKey, {
       algorithm: 'RS256',
       header: jwtHeader,
       noTimestamp: true
