@@ -9,12 +9,13 @@ const randomstring = require("randomstring");
 const OpenBankingAuth = require('../src/OpenBankingAuth').OpenBankingAuth;
 const config = require('./config/config.json');
 const privateKey = fs.readFileSync('./config/privatekey.key');
+const certificateOrPublicKey = fs.readFileSync('./config/certificateOrPublicKey');
 const app = express();
 const port = 3000;
 
-const accountInfoAuth = new OpenBankingAuth(config.accountInfo.clientId, privateKey, config.keyId, config.accountInfo.redirectUri, config.tokenEndpointUri, 
+const accountInfoAuth = new OpenBankingAuth(config.accountInfo.clientId, privateKey, certificateOrPublicKey, config.accountInfo.redirectUri, config.tokenEndpointUri, 
   config.authEndpointUri, config.accountInfo.scope, config.accountInfo.tokenIssuer, config.accountInfo.jwksUri);
-const paymentInitAuth = new OpenBankingAuth(config.paymentInit.clientId, privateKey, config.keyId, config.paymentInit.redirectUri, config.tokenEndpointUri, 
+const paymentInitAuth = new OpenBankingAuth(config.paymentInit.clientId, privateKey, certificateOrPublicKey, config.paymentInit.redirectUri, config.tokenEndpointUri, 
   config.authEndpointUri, config.paymentInit.scope, config.paymentInit.tokenIssuer, config.paymentInit.jwksUri);
 
 let paymentId;

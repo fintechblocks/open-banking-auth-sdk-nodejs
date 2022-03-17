@@ -7,10 +7,11 @@ const jwt = require('jsonwebtoken');
 module.exports = {
   createClient: createClient,
   jwtSign: jwtSign,
-  decodeJwt: decodeJwt
+  decodeJwt: decodeJwt,
+  generateKeyIdForCertificateOrPublicKey: generateKeyIdForCertificateOrPublicKey
 }
 
-async function createClient(clientId, privateKey, tokenEndpointUri, authEndpointUri, issuer, jwksUri) {
+async function createClient(clientId, privateKey, certificateOrPublicKey, tokenEndpointUri, authEndpointUri, issuer, jwksUri) {
   await checkKeyBitLength(privateKey);
   Issuer.defaultHttpOptions = {
     timeout: 120000
@@ -23,17 +24,32 @@ async function createClient(clientId, privateKey, tokenEndpointUri, authEndpoint
     issuer: issuer,
     jwks_uri: jwksUri
   });
-  const keystore = jose.JWK.createKeyStore();
-  await keystore.add(privateKey, 'pem');
+  const keyId = await generateKeyIdForCertificateOrPublicKey(certificateOrPublicKey);
+  const keystore = await createKeystoreFromPrivateKeyWithKeyId(privateKey, keyId);
 
   const client = new createdIssuer.Client({
     client_id: clientId,
     token_endpoint_auth_method: 'private_key_jwt',
     request_object_signing_alg: 'RS256'
-  }, keystore);
+  }, keystore.toJSON(true));
 
   client.CLOCK_TOLERANCE = 10;
   return client;
+}
+
+async function createKeystoreFromPrivateKeyWithKeyId(privateKey, keyID) {
+  const keystore = jose.JWK.createKeyStore();
+  const key = await jose.JWK.asKey(privateKey, 'pem');
+  const keyJson = key.toJSON(true);
+  keyJson.kid = keyID;
+  await keystore.add(keyJson, 'pem');
+  return keystore;
+}
+
+async function generateKeyIdForCertificateOrPublicKey(certificateOrPublicKey) {
+  const keystore = jose.JWK.createKeyStore();
+  const generatedKeystoreKey = await keystore.add(certificateOrPublicKey, 'pem');
+  return generatedKeystoreKey.kid;
 }
 
 function jwtSign(payload, secret, options) {

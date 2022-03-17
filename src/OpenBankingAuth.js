@@ -2,20 +2,21 @@
 
 const utils = require('./utils');
 module.exports.OpenBankingAuth = class OpenBankingAuth {
-  constructor(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri) {
+  constructor(clientId, privateKey, certificateOrPublicKey, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri) {
     this.clientId = clientId;
     this.privateKey = privateKey;
-    this.keyID = keyID;
+    this.certificateOrPublicKey = certificateOrPublicKey;
+    this.keyID = utils.generateKeyIdForCertificateOrPublicKey(certificateOrPublicKey);
     this.redirectUri = redirectUri;
     this.tokenEndpointUri = tokenEndpointUri;
     this.authEndpointUri = authEndpointUri;
     this.scope = scope;
-    this.issuer = issuer; 
+    this.issuer = issuer;
     this.jwksUri = jwksUri;
   }
 
   async getAccessToken() {
-    const client = await utils.createClient(this.clientId, this.privateKey, this.tokenEndpointUri, this.authEndpointUri, this.issuer, this.jwksUri);
+    const client = await utils.createClient(this.clientId, this.privateKey, this.certificateOrPublicKey, this.tokenEndpointUri, this.authEndpointUri, this.issuer, this.jwksUri);
     this.client = client;
     const accessTokenWithClientCredentials = await client.grant({
       grant_type: 'client_credentials',
@@ -40,7 +41,7 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
           }
         }
       }
-    }, this.privateKey, { algorithm: 'RS256' });
+    }, this.privateKey, { header: { alg: 'RS256' } });
 
     return this.client.authorizationUrl({
       scope: `openid ${this.scope}`,
@@ -78,7 +79,7 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
 
   async createSignatureHeader(body) {
     //because of different system-time
-    const yesterday = new Date().getTime() - 86400;
+    const yesterday = new Date().getTime() - 86400000;
     const jwtHeader = {
       alg: 'RS256',
       kid: this.keyID,
@@ -88,7 +89,6 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
       crit: ['b64', 'http://openbanking.org.uk/iat', 'http://openbanking.org.uk/iss']
     };
     const signature = await utils.jwtSign(body, this.privateKey, {
-      algorithm: 'RS256',
       header: jwtHeader,
       noTimestamp: true
     });

@@ -1,5 +1,4 @@
 {
-    "keyId": "AfFNfYXZf3arkkxv_9zqRU4d1jp1b39Edw1bxfEK5-4",
     "tokenEndpointUri": "https://<sandbox_api_host_of_the_bank>/auth/realms/ftb-sandbox/protocol/openid-connect/token",
     "authEndpointUri": "https://<sandbox_api_host_of_the_bank>/auth/realms/ftb-sandbox/protocol/openid-connect/auth",
     "accountInfo": {

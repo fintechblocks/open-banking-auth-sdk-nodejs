@@ -1,141 +1,145 @@
-# NodeJs-SDK #
+# NodeJs-SDK
 
-## What is NodeJs-SDK? ##
+## What is NodeJs-SDK?
 
 This SDK provides tools for the integration of the Open Banking authorization flow into your NodeJs server application.
 
 This repository contains two subfolders:
+
 * */src* contains the SDK source code
-* */example* contains an example on how to use the SDK
+* */example* contains an example of how to use the SDK
 
-## How to use SDK ##
+## How to use SDK
 
-First read throught the Authorization part of API documentation.
+First read through the Authorization part of API documentation.
 
-Account-information API documentation: https://<sandbox_portal_host_of_the_bank>/api-documentation/account-info-1.0
+Account-information API documentation: `https://<sandbox_portal_host_of_the_bank>/api-documentation/account-info-1.0`
 
-Payment-initiation API documentation: https://<sandbox_portal_host_of_the_bank>/api-documentation/payment-init-1.0
+Payment-initiation API documentation: `https://<sandbox_portal_host_of_the_bank>/api-documentation/payment-init-1.0`
 
-### Create an OpenBankingAuth instance ###
+### Create an OpenBankingAuth instance
 
-**OpenBankingAuth(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri) - constructor**
+Function: **OpenBankingAuth(clientId, privateKey, certificateOrPublicKey, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri) - constructor**
 
-*Required parameters*
+#### Required parameters
 
 * clientId (e.g. myApp@account-info.1.0)
-* privateKey (your private key, the public key has to be uploded on the developer portal)
-* keyID (the id of the keypair in your keystore, can be any string)
-* redirectUri (the OAuth2 callback url of your application)
-* tokenEndpointUri (token endpoint uri of OIDC server)
-* authEndpointUri (authentication endpoint uri of OIDC server)
+* privateKey (your private key)
+* certificateOrPublicKey (your certificate or public key which has to be uploaded on the developer portal)
+* redirectUri (the OAuth2 callback URL of your application)
+* tokenEndpointUri (token endpoint URL of OIDC server)
+* authEndpointUri (authentication endpoint URL of OIDC server)
 * scope (depends on API, read documentation)
-* jwksUri (certs endpoint uri of OIDC server)
-* issuer = (sandbox endpoint uri of OIDC server);
+* jwksUri (certs endpoint URL of OIDC server)
+* issuer = (sandbox endpoint URL of OIDC server);
 
-**Usage**
+#### Usage
 
 ```javascript
 const OpenBankingAuth = require('../src/OpenBankingAuth').OpenBankingAuth;
 ...
-const accountInfoAuth = new OpenBankingAuth(clientId, privateKey, keyID, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri);
+const accountInfoAuth = new OpenBankingAuth(clientId, privateKey, certificateOrPublicKey, redirectUri, tokenEndpointUri, authEndpointUri, scope, issuer, jwksUri);
 ```
 
-### Get an access-token ###
+### Get an access-token
 
-**getAccessToken():string**
+Function: **getAccessToken():string**
 
-**Usage**
+#### Usage
 
 ```javascript
 const accessToken = await accountInfoAuth.getAccessToken();
 ```
 
-### Generate authorization url ###
+### Generate authorization URL
 
-**generateAuthorizationUrl(intentId, state, nonce):string**
+Function: **generateAuthorizationUrl(intentId, state, nonce):string**
 
-*Required parameters*
+#### Required parameters
 
 * intentId (identification of previously created intent, e.g. ConsentId)
 * state (random string)
 * nonce (random string)
 
-**Usage**
+#### Usage
 
 ```javascript
 const authUrl = await accountInfoAuth.generateAuthorizationUrl(intentId, state, nonce);
 ```
 
-### Exhange authorization code to tokens ###
+### Exchange authorization code to tokens
 
-**exchangeToken(code):object**
+Function: **exchangeToken(code):object**
 
-*Required parameters*
+#### Required parameters
 
 * code (the authorization code received from the authorization server)
 
-**Usage**
+#### Usage
 
 ```javascript
 const newTokens = await accountInfoAuth.exchangeToken(code);
 ```
 
-## Extra functionality ##
+## Extra functionality
 
-### Create signature header ###
+### Create signature header
 
-**createSignatureHeader(body):string**
+Function: **createSignatureHeader(body):string**
 
-*Required parameters*
+#### Required parameters
 
 * body (intent, e.g. an account-request)
 
-**Usage**
+#### Usage
+
 ```javascript
 const xJwsSignature = await accountInfoAuth.createSignatureHeader(body);
 ```
 
-### Check if a token is expired ###
+### Check if a token is expired
 
-**isTokenExpired(token [, expiredAfterSeconds]):boolean**
+Function: **isTokenExpired(token [, expiredAfterSeconds]):boolean**
 
-*Required parameters*
+#### Required parameters
 
 * token (jwt)
 
-*Optional parameters*
+#### Optional parameters
 
 * expiredAfterSeconds (number of seconds * 1000)
 
-**Usage**
+#### Usage
 
 ```javascript
 const isExpired = accountInfoAuth.isTokenExpired(token, 5000); // will token expire after five seconds?
 ```
 
-### Use a refresh token ###
+### Use a refresh token
 
-**refreshToken(refreshToken):object**
+Function: **refreshToken(refreshToken):object**
 
-*Required parameters*
+#### Required parameters
 
 * refresh token
 
-**Usage**
+#### Usage
 
 ```javascript
 const newTokens = accountInfoAuth.refreshToken(refreshToken);
 ```
 
-## How to run the example ##
+## How to run the example
 
-Open *example/app.js* and replace <sandbox_api_host_of_the_bank> with correct value (e.g. api.sandbox.bank.hu).
-
-Run example.
+* Open `example/config/config.json` and replace settings with the correct values
+* Overwrite `example/config/privatekey.key` with your own private key. Filename must be `privatekey.key`
+* Overwrite `example/config/certificateOrPublicKey` with your own certificate or public key. Filename must be `certificateOrPublicKey`
+* Run example
 
 ```shell
 cd example
+npm install
 npm start
 ```
 
-Open your browser and navigate to *http://localhost:3000/account-info* or *http://localhost:3000/payment-init*.
+Open your browser and navigate to `http://localhost:3000/account-info` or `http://localhost:3000/payment-init`.

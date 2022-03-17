@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "jsonwebtoken": "^8.5.1",
-    "node-jose": "^1.1.4",
-    "openid-client": "^2.5.0"
+    "node-jose": "^2.0.0",
+    "openid-client": "^5.1.2"
   }
 }
