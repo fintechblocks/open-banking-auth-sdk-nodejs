@@ -1,16 +1,25 @@
 {
-  "name": "nodejs-sdk-src",
-  "version": "1.0.0",
-  "description": "NodeJS SDK src",
+  "name": "ftx-open-banking-nodejs-auth-sdk",
+  "version": "1.1.1",
+  "description": "A NodeJS SDK to support Open Banking authorization code flow.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "FintechX Technologies Ltd.",
+  "license": "Apache-2.0",
   "dependencies": {
     "jsonwebtoken": "^8.5.1",
     "node-jose": "^2.0.0",
     "openid-client": "^5.1.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fintechblocks/open-banking-auth-sdk-nodejs.git"
+  },
+  "keywords": [
+    "sdk",
+    "openbanking",
+    "authorization"
+  ]
 }
