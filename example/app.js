@@ -12,7 +12,7 @@ const privateKey = fs.readFileSync('./config/privatekey.key');
 const certificateOrPublicKey = fs.readFileSync('./config/certificateOrPublicKey');
 const app = express();
 const port = 3000;
-
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 const accountInfoAuth = new OpenBankingAuth(config.accountInfo.clientId, privateKey, certificateOrPublicKey, config.accountInfo.redirectUri, config.tokenEndpointUri, 
   config.authEndpointUri, config.accountInfo.scope, config.accountInfo.tokenIssuer, config.accountInfo.jwksUri);
 const paymentInitAuth = new OpenBankingAuth(config.paymentInit.clientId, privateKey, certificateOrPublicKey, config.paymentInit.redirectUri, config.tokenEndpointUri, 

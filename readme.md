@@ -9,13 +9,18 @@ This repository contains two subfolders:
 * */src* contains the SDK source code
 * */example* contains an example of how to use the SDK
 
+## Dependencies
+
+* Node.js > ^16.18.1 (Gallium)
+* npm > 8.19.2
+
 ## How to use SDK
 
 First read through the Authorization part of API documentation.
 
-Account-information API documentation: `https://<sandbox_portal_host_of_the_bank>/api-documentation/account-info-1.0`
+Account-information API documentation: `https://<sandbox_portal_host_of_the_bank>/api-documentation/account-info-ob`
 
-Payment-initiation API documentation: `https://<sandbox_portal_host_of_the_bank>/api-documentation/payment-init-1.0`
+Payment-initiation API documentation: `https://<sandbox_portal_host_of_the_bank>/api-documentation/payment-init-ob`
 
 ### Create an OpenBankingAuth instance
 
@@ -23,7 +28,7 @@ Function: **OpenBankingAuth(clientId, privateKey, certificateOrPublicKey, redire
 
 #### Required parameters
 
-* clientId (e.g. myApp@account-info.1.0)
+* clientId (e.g. myApp@account-info-ob)
 * privateKey (your private key)
 * certificateOrPublicKey (your certificate or public key which has to be uploaded on the developer portal)
 * redirectUri (the OAuth2 callback URL of your application)
