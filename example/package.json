@@ -13,7 +13,7 @@
     "axios": "^0.21.4",
     "axios-error-converter": "^1.0.2",
     "express": "^4.17.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "randomstring": "^1.1.5"
   }
 }
