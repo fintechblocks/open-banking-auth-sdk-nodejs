@@ -33,7 +33,7 @@
                     "InstructionIdentification": "ACME412",
                     "EndToEndIdentification": "FRESCO.21302.GFX.20",
                     "InstructedAmount": {
-                        "Amount": "165.88",
+                        "Amount": "165.00",
                         "Currency": "HUF"
                     },
                     "CreditorAccount": {
