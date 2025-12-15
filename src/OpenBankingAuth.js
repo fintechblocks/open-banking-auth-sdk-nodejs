@@ -88,7 +88,7 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
       'http://openbanking.org.uk/iss': 'C=UK, ST=England, L=London, O=Acme Ltd.',
       crit: ['b64', 'http://openbanking.org.uk/iat', 'http://openbanking.org.uk/iss']
     };
-    const signature = await utils.jwtSign(body, this.privateKey, {      
+    const signature = await utils.jwtSign(body, this.privateKey, {
       header: jwtHeader,
       noTimestamp: true
     });
