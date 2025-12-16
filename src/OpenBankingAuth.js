@@ -6,7 +6,6 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
     this.clientId = clientId;
     this.privateKey = privateKey;
     this.certificateOrPublicKey = certificateOrPublicKey;
-    this.keyID = utils.generateKeyIdForCertificateOrPublicKey(certificateOrPublicKey);
     this.redirectUri = redirectUri;
     this.tokenEndpointUri = tokenEndpointUri;
     this.authEndpointUri = authEndpointUri;
@@ -16,9 +15,10 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
   }
 
   async getAccessToken() {
-    const client = await utils.createClient(this.clientId, this.privateKey, this.certificateOrPublicKey, this.tokenEndpointUri, this.authEndpointUri, this.issuer, this.jwksUri);
-    this.client = client;
-    const accessTokenWithClientCredentials = await client.grant({
+    this.keyID = await utils.generateKeyIdForCertificateOrPublicKey(this.certificateOrPublicKey);
+    this.signingAlgorithm = utils.determineSigningAlgorithm(this.certificateOrPublicKey);
+    this.client = await utils.createClient(this.clientId, this.privateKey, this.tokenEndpointUri, this.authEndpointUri, this.issuer, this.jwksUri, this.signingAlgorithm);
+    const accessTokenWithClientCredentials = await this.client.grant({
       grant_type: 'client_credentials',
       scope: this.scope
     });
@@ -41,7 +41,7 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
           }
         }
       }
-    }, this.privateKey, { header: { alg: 'RS256' } });
+    }, this.privateKey, { algorithm: this.signingAlgorithm });
 
     return this.client.authorizationUrl({
       scope: `openid ${this.scope}`,
@@ -81,7 +81,7 @@ module.exports.OpenBankingAuth = class OpenBankingAuth {
     //because of different system-time
     const yesterday = new Date().getTime() - 86400000;
     const jwtHeader = {
-      alg: 'RS256',
+      alg: this.signingAlgorithm,
       kid: this.keyID,
       b64: false,
       'http://openbanking.org.uk/iat': yesterday,

@@ -28,6 +28,7 @@
     - [4.3.1. Required parameters](#431-required-parameters)
     - [4.3.2. Usage](#432-usage)
 - [5. How to run the example](#5-how-to-run-the-example)
+- [6. How to test multi auth](#6-how-to-test-multi-auth)
 
 ## 1. What is NodeJs-SDK?
 
@@ -176,3 +177,27 @@ npm start
 ```
 
 Open your browser and navigate to `http://localhost:3000/account-info` or `http://localhost:3000/payment-init`.
+
+## 6. How to test multi auth
+
+- Open `example/app.js` and add new multi-auth endpoint:
+
+```javascript
+app.get('/payment-init-multi', async function (req, res) {
+  try {
+    const state = crypto.randomBytes(12).toString('hex');
+    const nonce = crypto.randomBytes(12).toString('hex');
+    const authUrl = await paymentInitAuth.generateAuthorizationUrl(paymentId, state, nonce);
+    res.redirect(authUrl);
+  } catch (error) {
+    console.log(`${new Date().toISOString()} | Unexpected error: ${error}`);
+    res.status(500).send(error.message);
+  }
+});
+```
+
+- First open your browser and navigate to `http://localhost:3000/payment-init`.
+- Authorize a PaymentConsent with user who has not enough right on the account.
+- After redirect the PaymentConsent is in AwaitingFurtherAuthorisation status.
+- Navigate to `http://localhost:3000/payment-init-multi` and Authorize the same PaymentConsent with user who has enough right on account.
+- After redirect the PaymentConsent is in Authorised status.
