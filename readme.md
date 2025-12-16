@@ -180,7 +180,7 @@ Open your browser and navigate to `http://localhost:3000/account-info` or `http:
 
 ## 6. How to test multi auth
 
-- Open `example/app.js` and add new multi-auth endpoint:
+- Open `example/app.js` and add a new multi-auth endpoint:
 
 ```javascript
 app.get('/payment-init-multi', async function (req, res) {
@@ -197,7 +197,7 @@ app.get('/payment-init-multi', async function (req, res) {
 ```
 
 - First open your browser and navigate to `http://localhost:3000/payment-init`.
-- Authorize a PaymentConsent with user who has not enough right on the account.
-- After redirect the PaymentConsent is in AwaitingFurtherAuthorisation status.
-- Navigate to `http://localhost:3000/payment-init-multi` and Authorize the same PaymentConsent with user who has enough right on account.
-- After redirect the PaymentConsent is in Authorised status.
+- Authorize a PaymentConsent with a user who does not have enough rights on the account to authorize the payment alone.
+- After redirecting back, the PaymentConsent shall be in AwaitingFurtherAuthorisation status.
+- Navigate to `http://localhost:3000/payment-init-multi` and Authorize the same PaymentConsent with another user who has enough rights on the account to authorize the payment.
+- After redirecting back, the PaymentConsent shall be in Authorised status.
