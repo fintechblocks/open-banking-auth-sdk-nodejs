@@ -1,6 +1,6 @@
 {
   "name": "ftx-open-banking-nodejs-auth-sdk",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A NodeJS SDK to support Open Banking authorization code flow.",
   "main": "app.js",
   "scripts": {
